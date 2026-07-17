@@ -39,7 +39,7 @@ npm run test        # unit tests
 npm run test:e2e     # end-to-end tests
 ```
 
-App runs at `http://localhost:3000`. Swagger docs at `http://localhost:3000/api`.
+App runs at `http://localhost:3000`. Swagger docs at `http://localhost:3000/api/docs`.
 
 ## Environment Variables (`.env.example`)
 

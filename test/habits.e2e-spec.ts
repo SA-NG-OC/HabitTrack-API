@@ -262,4 +262,61 @@ describe('HabitsController (e2e)', () => {
         .expect(404);
     });
   });
+
+  describe('GET /habits/:id/stats', () => {
+    let habitId: string;
+
+    beforeEach(async () => {
+      const createRes = await request(app.getHttpServer())
+        .post('/habits')
+        .set('Authorization', `Bearer ${tokenA}`)
+        .send({ title: 'Stats Habit' })
+        .expect(201);
+      habitId = createRes.body.data._id;
+    });
+
+    it('should retrieve habit stats successfully with zero check-ins', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/habits/${habitId}/stats`)
+        .set('Authorization', `Bearer ${tokenA}`)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('statusCode', 200);
+      expect(response.body.data).toEqual({
+        habitId,
+        currentStreak: 0,
+        longestStreak: 0,
+        completionRateLast30Days: 0,
+        totalCheckIns: 0,
+      });
+    });
+
+    it('should retrieve habit stats reflecting log check-ins', async () => {
+      const todayStr = new Date().toLocaleDateString('en-CA');
+
+      // Log a check-in
+      await request(app.getHttpServer())
+        .post(`/habits/${habitId}/checkins`)
+        .set('Authorization', `Bearer ${tokenA}`)
+        .send({ date: todayStr })
+        .expect(201);
+
+      const response = await request(app.getHttpServer())
+        .get(`/habits/${habitId}/stats`)
+        .set('Authorization', `Bearer ${tokenA}`)
+        .expect(200);
+
+      expect(response.body.data.currentStreak).toBe(1);
+      expect(response.body.data.longestStreak).toBe(1);
+      expect(response.body.data.totalCheckIns).toBe(1);
+      expect(response.body.data.completionRateLast30Days).toBe(0.03); // 1/30 = 0.03
+    });
+
+    it('should return 404 when user B requests stats for user A habit', async () => {
+      await request(app.getHttpServer())
+        .get(`/habits/${habitId}/stats`)
+        .set('Authorization', `Bearer ${tokenB}`)
+        .expect(404);
+    });
+  });
 });
