@@ -44,17 +44,26 @@ Goal: ship a working NestJS + MongoDB habit-tracking API, end to end, in a singl
 - Unit tests for streak calculation with edge cases: no check-ins, single check-in, broken streak, streak spanning "today".
 - Commit: `feat: add stats endpoint with aggregation pipeline`.
 
-### Phase 5 — Tests, Docs, Polish (target: ~45 min)
-- Fill in Swagger decorators (`@ApiTags`, `@ApiOperation`, `@ApiResponse`) across controllers.
-- Global `ValidationPipe`, exception filter for consistent error shape.
-- Make sure `npm run test` and `npm run test:e2e` both pass cleanly.
-- Commit: `test: add e2e coverage for core flows` / `docs: complete swagger annotations`.
+### Phase 5 — Final Polish & Project Completion (target: ~60 min)
 
-### Phase 6 — Review & PR Prep (target: ~25 min)
-- Self-review the diff as if reviewing a teammate's PR: check for leftover `console.log`, unused imports, inconsistent naming, missing validation.
-- Ask AI to draft a PR description (summary, how to test, screenshots N/A) — **review it, correct anything inaccurate**.
-- Update `README.md` if any commands/env vars changed during the build.
-- Final update to `progress.md` and `task.md`.
+- Ensure all tests pass cleanly:
+  - `npm run test`
+  - `npm run test:e2e`
+- Configure global `ValidationPipe` and global exception filter if needed.
+- Create a database seed script with sample users, habits, and check-ins for local development.
+- Update `README.md` with:
+  - Project overview
+  - Tech stack
+  - Prerequisites
+  - Environment variables
+  - Docker setup
+  - Installation
+  - Running the project
+  - Running tests
+  - API documentation (Swagger)
+  - Seeding the database
+- Update `progress.md` and `task.md`.
+- Commit: `docs: finalize project documentation and setup`
 
 ## Definition of Done
 

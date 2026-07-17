@@ -1,98 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# HabitTrack API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+HabitTrack API is a progressive, production-ready RESTful backend built with [NestJS](https://nestjs.com/) and [MongoDB](https://www.mongodb.com/) (using Mongoose). It allows users to track their daily habits, log daily check-ins, calculate timezone-independent consecutive completion streaks, and view aggregated progress statistics.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 1. Tech Stack
+- **Framework**: NestJS (v11.x)
+- **Database**: MongoDB & Mongoose
+- **Language**: TypeScript
+- **Documentation**: Swagger API docs
+- **Testing**: Jest & Supertest (E2E Integration Testing)
+- **Containerization**: Docker & Docker Compose
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 2. Prerequisites
+Ensure you have the following installed on your machine:
+- **Node.js** (v18.x or later)
+- **npm** (v9.x or later)
+- **Docker & Docker Compose** (optional, but recommended for local database setup)
 
+---
+
+## 3. Environment Variables
+Copy `.env.example` to `.env` for local development:
 ```bash
-$ npm install
+cp .env.example .env
+```
+And copy `.env.test.example` to `.env.test` for testing:
+```bash
+cp .env.test.example .env.test
 ```
 
-## Compile and run the project
+### Configuration Details
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MONGODB_URI` | MongoDB Connection URI | `mongodb://localhost:27017/habittrack` |
+| `JWT_SECRET` | Secret key used to sign JWT access tokens | `super-secret-habit-track-key-2026` |
+| `JWT_EXPIRES_IN` | Token expiration duration | `1d` |
+| `PORT` | Application server port | `3000` |
 
+*Note: For testing, `.env.test` defaults `MONGODB_URI` to `mongodb://localhost:27018/habittrack-test` to keep development and test databases isolated.*
+
+---
+
+## 4. Docker Database Setup
+You can spin up local isolated dev and test MongoDB database containers using Docker:
 ```bash
-# development
-$ npm run start
+docker-compose up -d
+```
+This launches two MongoDB services:
+- **Development DB**: `localhost:27017`
+- **Testing DB**: `localhost:27018`
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
+## 5. Installation
+Install the project dependencies:
+```bash
+npm install
 ```
 
-## Run tests
+---
 
+## 6. Database Seeding
+To populate your local development database with sample users, habits, and check-ins:
 ```bash
-# unit tests
-$ npm run test
+npm run seed
+```
+This runs the script at `scripts/seed.ts` which wipes the local database and inserts sample records:
+- **John Doe** (`john@example.com` / `password123`)
+- **Jane Doe** (`jane@example.com` / `password123`)
+- Sample habits and check-in history.
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
+## 7. Running the Application
+
+### Development (Watch Mode)
+```bash
+npm run start:dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Production Build
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Build the project
+npm run build
+
+# Start the built application
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 8. Running Tests
 
-Check out a few resources that may come in handy when working with NestJS:
+### Unit Tests
+Runs service-level unit tests (including credentials hashing and statistical calculations):
+```bash
+npm run test
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### E2E Integration Tests
+Runs API integration tests sequentially (`--runInBand`) against the isolated test database:
+```bash
+npm run test:e2e
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 9. API Documentation (Swagger)
+When the application is running, you can access the interactive Swagger API documentation UI at:
+```text
+http://localhost:3000/api
+```
+This documents all endpoints (Auth, Users, Habits, Check-ins, and Stats), schemas, and response types.
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 10. Global Architectures
+- **Consistent Response Envelope**: All successful HTTP responses are wrapped in a `{ statusCode, message, data }` structure by a global `ResponseInterceptor`.
+- **Global Error Handling**: Uncaught application and MongoDB exceptions (such as validation errors and duplicate index code 11000 conflicts) are intercepted and unified into a `{ statusCode, message, error }` shape via a global `HttpExceptionFilter`.
+- **Ownership Verification**: Habits and Check-in resources enforce strict ownership boundaries. Accessing or modifying someone else's resource throws a clean `404 Not Found` response instead of a 403 Forbidden to prevent leaking data existence.

@@ -145,7 +145,32 @@ Log format per session:
 - Mongoose aggregate mock in specs: Used a Jest mock return value for `checkinModel.aggregate().exec()` returning mock dates and counts to test different statistics boundary cases without spins.
 
 **Next session should start with:**
-- Start Phase 5: Configure global validations, ensure global exception filters, and run a final verification of the entire application.
+- Completed Phase 5 in Session 5.
+
+---
+
+## Session 5 — 2026-07-17
+
+**Goal for this session:**
+- Complete Phase 5 (Final Polish, Global Settings Validation, Database Seeding, and README Documentation) from `plan.md`.
+
+**Done:**
+- Created Git branch `feat/polish` branching off `feat/stats`.
+- Wrote database seed script inside `scripts/seed.ts` featuring sample users, habits, and check-ins. Included checks for `mongoose.connection.db` to satisfy TypeScript strict property verification.
+- Registered `"seed": "ts-node scripts/seed.ts"` script in `package.json` and executed it successfully.
+- Overwrote the generic root `README.md` with detailed installation, tech stack, environment variable, Docker, seeding, running, testing, and Swagger API documentation.
+- Verified that all DTO validations and global exception filters are perfectly set up and registered.
+- Verified that all 32 unit and e2e integration tests pass sequentially (14 unit, 18 e2e).
+- Commits: Staged and committed changes (`docs: finalize project setup, seeding script, and documentation in README.md`).
+
+**Not done / blocked:**
+- None.
+
+**Decisions made (and why):**
+- Seed Script DB Safety Check: Used explicit check `if (!db) { throw new Error(...) }` to ensure compile-time TypeScript checks pass for `mongoose.connection.db`.
+
+**Next session should start with:**
+- Merge the feature branch to master, clean logs, and prepare for final project submission.
 
 ---
 
