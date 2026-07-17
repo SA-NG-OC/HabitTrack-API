@@ -11,40 +11,40 @@ export enum HabitFrequency {
 @Schema({ _id: false })
 export class HabitStats {
   @Prop({ default: 0 })
-  currentStreak: number;
+  currentStreak!: number;
 
   @Prop({ default: 0 })
-  longestStreak: number;
+  longestStreak!: number;
 
   @Prop({ type: String, default: null })
-  lastCheckInDate: string | null;
+  lastCheckInDate!: string | null;
 }
 
 @Schema({ timestamps: true })
 export class Habit {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  userId!: Types.ObjectId;
 
   @Prop({ required: true, trim: true, maxlength: 100 })
-  title: string;
+  title!: string;
 
   @Prop({ trim: true, maxlength: 500, default: '' })
-  description: string;
+  description!: string;
 
   @Prop({ trim: true, default: 'general' })
-  category: string;
+  category!: string;
 
   @Prop({ type: String, enum: HabitFrequency, default: HabitFrequency.DAILY })
-  frequency: HabitFrequency;
+  frequency!: HabitFrequency;
 
   @Prop({ default: '#4F46E5' })
-  color: string;
+  color!: string;
 
   @Prop({ default: false })
-  archived: boolean;
+  archived!: boolean;
 
   @Prop({ type: HabitStats, default: () => ({}) })
-  stats: HabitStats;
+  stats!: HabitStats;
 }
 
 export const HabitSchema = SchemaFactory.createForClass(Habit);

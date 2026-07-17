@@ -53,7 +53,37 @@ Log format per session:
 - Isolated test database: Configured e2e tests to write to `habittrack-test` database using `process.env.NODE_ENV = 'test'` and clean up automatically with `connection.dropDatabase()`.
  
  **Next session should start with:**
-- Start Phase 2: Create the `Habit` schema, `HabitStats` subdocument, and CRUD endpoints in `HabitsModule` (all scoped to `req.user.id`).
+- Completed Phase 2 in Session 2.
+
+---
+
+## Session 2 — 2026-07-17
+
+**Goal for this session:**
+- Complete Phase 2 (Habits Module CRUD, Exception Filter, and Split Swagger Decorators) from `plan.md`.
+
+**Done:**
+- Created `HttpExceptionFilter` at `src/common/filters/http-exception.filter.ts` to cleanly format NestJS & MongoDB exceptions, and registered it globally.
+- Created `Habit` Mongoose schema and `HabitStats` subdocument at `src/habits/schemas/habit.schema.ts` with required indexes.
+- Created DTOs (`CreateHabitDto` and `UpdateHabitDto`) with proper validations and Swagger property annotations.
+- Implemented individual custom Swagger decorators for each habits endpoint under `src/habits/decorators/`.
+- Implemented `HabitsService` and `HabitsController` handling CRUD operations with strict user ownership checks (returning 404 for unauthorized accesses).
+- Wired `HabitsModule` to the main `AppModule`.
+- Created comprehensive integration tests inside `test/habits.e2e-spec.ts`.
+- Configured sequentially-run test scripts (`--runInBand`) in `package.json` to prevent database drop collisions.
+- Verified that all unit and e2e integration tests pass (20 tests total).
+- Commits: Staged and committed changes (`feat: implement habits CRUD module and global HttpExceptionFilter`).
+
+**Not done / blocked:**
+- None.
+
+**Decisions made (and why):**
+- Split Swagger decorators: Kept decorators separated into file-per-api structure to avoid bloating a single module-wide decorator file.
+- Redundant index removal: Handled type reflection issues with `string | null` in Mongoose and avoided duplicate indexing warnings.
+- Sequential tests (`--runInBand`): Modified the `test:e2e` script to execute test suites sequentially to prevent parallel database dropping collisions on the shared local test DB.
+
+**Next session should start with:**
+- Start Phase 3: Create the `CheckIn` schema, compound unique indexes, `CreateCheckInDto`, and endpoints to log check-ins, updating `Habit.stats` (streaks) dynamically.
 
 ---
 

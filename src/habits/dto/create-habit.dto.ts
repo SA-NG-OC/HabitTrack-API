@@ -11,7 +11,7 @@ export class CreateHabitDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  title: string;
+  title!: string;
 
   @ApiPropertyOptional({
     description: 'A detailed description of the habit',
