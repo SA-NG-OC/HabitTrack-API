@@ -112,8 +112,40 @@ Log format per session:
 - Strict Type definite assignment (`!`): Added `!` definite assignment assertions to properties in check-in schemas/DTOs to strictly satisfy TypeScript strict properties validation rules.
 - UTC Streak Date comparison: Utilized `Date.UTC` calculations inside `streak-calculator.ts` on `YYYY-MM-DD` strings to eliminate timezone offset ambiguities when counting consecutive days.
 
+ **Next session should start with:**
+- Completed Phase 4 in Session 4.
+
+---
+
+## Session 4 — 2026-07-17
+
+**Goal for this session:**
+- Complete Phase 4 (Statistics Module, Aggregation Pipeline, and Stats Boundary Tests) from `plan.md`.
+
+**Done:**
+- Created Git branch `feat/stats` branching off `feat/checkins`.
+- Created DTO class `HabitStatsResponse` inside `src/habits/dto/habit-stats-response.dto.ts` with definite assignment assertions (`!`) on all properties.
+- Developed `StatsService` at `src/habits/stats.service.ts` with a MongoDB aggregation pipeline matching check-ins by `habitId`, sorting, grouping by ID, and listing check-in dates.
+- Implemented application calculations for:
+  - `completionRateLast30Days` (calculates count of check-ins within last 30 days divided by 30, rounded to 2 decimal places).
+  - `currentStreak` and `longestStreak` utilizing the UTC streak tracking utility.
+- Handled boundary case of zero check-ins cleanly in `StatsService` returning all streaks and rates as 0.
+- Implemented individual custom Swagger decorator `@ApiGetHabitStatsDocs()` inside `src/habits/decorators/get-habit-stats-swagger.decorator.ts`.
+- Registered `StatsService` and `CheckIn` model schema inside `HabitsModule`.
+- Mapped `GET /habits/:id/stats` endpoint inside `HabitsController` securing access via JWT guards and verifying user ownership.
+- Developed unit tests in `src/habits/stats.service.spec.ts` covering streak resets, longest streak preservation, and 30-day rate boundary cases.
+- Developed integration e2e tests for statistics endpoint inside `test/habits.e2e-spec.ts`.
+- Verified all 32 unit and e2e integration tests pass successfully.
+- Commits: Staged and committed changes (`feat: implement stats aggregation pipeline, get habit stats endpoint, and stats boundary unit tests`).
+
+**Not done / blocked:**
+- None.
+
+**Decisions made (and why):**
+- Mongoose aggregate mock in specs: Used a Jest mock return value for `checkinModel.aggregate().exec()` returning mock dates and counts to test different statistics boundary cases without spins.
+
 **Next session should start with:**
-- Start Phase 4: Create the `StatsService` or stats calculation logic to aggregate completion rates, count check-ins by category, and generate history reports.
+- Start Phase 5: Configure global validations, ensure global exception filters, and run a final verification of the entire application.
 
 ---
 
