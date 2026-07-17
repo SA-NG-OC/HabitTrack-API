@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:latest
@@ -9,5 +7,14 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  mongodb-test:
+    image: mongo:latest
+    container_name: habittrack-mongo-test
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-test-data:/data/db
+
 volumes:
   mongo-data:
+  mongo-test-data:
