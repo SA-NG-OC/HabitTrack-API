@@ -255,32 +255,29 @@ Status legend:
 
 ---
 
-# Phase 5 — Tests, Documentation & Polish
+# Phase 5 — Final Polish & Documentation
 
-- [ ] Configure global ValidationPipe
-- [ ] Configure global exception filter
-- [ ] Verify all DTOs include validation decorators
-- [ ] Verify every endpoint has Swagger documentation
-- [ ] Verify every endpoint has an integration test
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
+- [x] Configure global `ValidationPipe`
+- [x] Configure global exception filter
+- [x] Verify all DTOs include validation decorators
+- [x] Verify every endpoint has Swagger documentation
+- [x] Verify every endpoint has an integration test
+- [x] Create database seed script with sample data
+- [x] Update `README.md (not docs\context\README.md)`
+  - Project overview
+  - Setup & installation
+  - Environment variables
+  - Docker
+  - Running the application
+  - Running tests
+  - Swagger
+  - Database seeding
+- [x] `npm run test`
+- [x] `npm run test:e2e`
 
 ---
 
-- [ ] Commit Phase 5
-
----
-
-# Phase 6 — Review & PR
-
-- [ ] Remove `console.log`
-- [ ] Remove unused imports
-- [ ] Consistent naming
-- [ ] Confirm no secrets committed
-- [ ] Review AI-generated PR description
-- [ ] Update README
-- [ ] Update progress.md
-- [ ] Open Pull Request
+- [x] Commit Phase 5
 
 ---
 
