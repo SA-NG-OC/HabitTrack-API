@@ -7,6 +7,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication<App>;
@@ -19,6 +20,7 @@ describe('AuthController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.useGlobalInterceptors(new ResponseInterceptor());
+    app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,

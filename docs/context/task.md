@@ -95,74 +95,74 @@ Status legend:
 # Phase 2 — Habits
 
 ## Exception filter
-- [ ] Create exception filter file
+- [x] Create an exception filter file.
 
 ## Model
 
-- [ ] Create Habit schema
-- [ ] Create HabitStats subdocument
-- [ ] Create indexes
+- [x] Create Habit schema
+- [x] Create HabitStats subdocument
+- [x] Create indexes
 
 ---
 
 ## DTO
 
-- [ ] CreateHabitDto
-- [ ] UpdateHabitDto
-- [ ] Validation decorators
+- [x] CreateHabitDto
+- [x] UpdateHabitDto
+- [x] Validation decorators
 
 ---
 
 ## POST /habits
 
-- [ ] Implement service
-- [ ] Implement controller
-- [ ] Always take userId from `req.user`
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Implement controller
+- [x] Always take userId from `req.user`
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## GET /habits
 
-- [ ] Implement service
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## GET /habits/:id
 
-- [ ] Implement service
-- [ ] Ownership check (404 instead of 403)
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Ownership check (404 instead of 403)
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## PATCH /habits/:id
 
-- [ ] Implement service
-- [ ] Ownership check
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Ownership check
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## DELETE /habits/:id
 
-- [ ] Implement service
-- [ ] Ownership check
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Ownership check
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
-- [ ] Commit Phase 2
+- [x] Commit Phase 2
 
 ---
 
