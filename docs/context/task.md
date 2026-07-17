@@ -170,58 +170,58 @@ Status legend:
 
 ## Model
 
-- [ ] Create CheckIn schema
-- [ ] Add unique compound index `(habitId, date)`
+- [x] Create CheckIn schema
+- [x] Add unique compound index `(habitId, date)`
 
 ---
 
 ## DTO
 
-- [ ] CreateCheckInDto
-- [ ] Validate `YYYY-MM-DD`
+- [x] CreateCheckInDto
+- [x] Validate `YYYY-MM-DD`
 
 ---
 
 ## POST /habits/:id/checkins
 
-- [ ] Implement service
-- [ ] Duplicate-day returns 409
-- [ ] Update HabitStats
-- [ ] Implement controller
-- [ ] Verify ownership
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
-- [ ] Test duplicate check-in returns 409
+- [x] Implement service
+- [x] Duplicate-day returns 409
+- [x] Update HabitStats
+- [x] Implement controller
+- [x] Verify ownership
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
+- [x] Test duplicate check-in returns 409
 
 ---
 
 ## GET /habits/:id/checkins
 
-- [ ] Implement service
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## DELETE /habits/:id/checkins/:checkInId
 
-- [ ] Implement service
-- [ ] Update HabitStats
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement service
+- [x] Update HabitStats
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## Streak Tests
 
-- [ ] Consecutive-day streak increments correctly
-- [ ] Removing check-in recalculates streak correctly
+- [x] Consecutive-day streak increments correctly
+- [x] Removing check-in recalculates streak correctly
 
 ---
 
-- [ ] Commit Phase 3
+- [x] Commit Phase 3
 
 ---
 
