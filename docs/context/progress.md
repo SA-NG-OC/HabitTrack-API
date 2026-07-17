@@ -82,8 +82,38 @@ Log format per session:
 - Redundant index removal: Handled type reflection issues with `string | null` in Mongoose and avoided duplicate indexing warnings.
 - Sequential tests (`--runInBand`): Modified the `test:e2e` script to execute test suites sequentially to prevent parallel database dropping collisions on the shared local test DB.
 
+ **Next session should start with:**
+- Completed Phase 3 in Session 3.
+
+---
+
+## Session 3 — 2026-07-17
+
+**Goal for this session:**
+- Complete Phase 3 (CheckIns Module & Streak Recalculation logic) from `plan.md`.
+
+**Done:**
+- Created Git branch `feat/checkins` to begin Phase 3.
+- Created `CheckIn` model schema inside `src/checkins/schemas/checkin.schema.ts` with compound unique index `{ habitId: 1, date: 1 }` to prevent double check-in per day, and `{ habitId: 1, date: -1 }` for query sorting. Used definite assignment operator `!` for properties.
+- Developed `CreateCheckInDto` validating `YYYY-MM-DD` date strings.
+- Implemented split Swagger decorator files for each endpoint inside `src/checkins/decorators/`.
+- Coded streak calculation algorithm at `src/checkins/utils/streak-calculator.ts` with UTC date diff helpers to handle gaps, consecutive increments, and historical streak caching.
+- Coded `CheckInsService` validating habit ownership (throwing 404 for wrong habits) and catching double check-in exceptions to throw `409 Conflict`.
+- Coded `CheckInsController` mapping nested `/habits/:id/checkins` endpoints protected by JWT strategy.
+- Created `CheckInsModule` and registered it in `AppModule`.
+- Created comprehensive integration e2e tests inside `test/checkins.e2e-spec.ts`.
+- Verified all 29 tests across 4 test suites pass successfully.
+- Commits: Staged and committed changes (`feat: implement check-ins module and streak calculations with consecutive-day and gap handlers`).
+
+**Not done / blocked:**
+- None.
+
+**Decisions made (and why):**
+- Strict Type definite assignment (`!`): Added `!` definite assignment assertions to properties in check-in schemas/DTOs to strictly satisfy TypeScript strict properties validation rules.
+- UTC Streak Date comparison: Utilized `Date.UTC` calculations inside `streak-calculator.ts` on `YYYY-MM-DD` strings to eliminate timezone offset ambiguities when counting consecutive days.
+
 **Next session should start with:**
-- Start Phase 3: Create the `CheckIn` schema, compound unique indexes, `CreateCheckInDto`, and endpoints to log check-ins, updating `Habit.stats` (streaks) dynamically.
+- Start Phase 4: Create the `StatsService` or stats calculation logic to aggregate completion rates, count check-ins by category, and generate history reports.
 
 ---
 
