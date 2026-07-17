@@ -1,76 +1,181 @@
-# Project Overview — HabitTrack API
+# Data Schemas — HabitTrack API
 
-## 1. What We're Building
+Three collections: `users`, `habits`, `checkins`. Mongoose (NestJS `@Schema()` style) definitions below, plus indexes and key DTO shapes.
 
-**HabitTrack API** — a backend service for tracking daily/weekly habits and check-ins, with streak calculation via MongoDB aggregation.
+---
 
-Users create habits (e.g. "Drink water", "Read 20 pages"), log check-ins over time, and query stats like current streak, longest streak, and completion rate.
+## 1. User
 
-## 2. Why This Project Fits MongoDB
+```ts
+// user.schema.ts
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-This is a deliberately chosen domain to practice real MongoDB schema-design decisions, not just "CRUD with a different database":
+export type UserDocument = User & Document;
 
-- **Embedding vs. Referencing tradeoff:** `Habit` references `User` (many habits per user, referencing is natural), while `CheckIn` is a separate collection referenced by `habitId` rather than embedded — because check-in history grows unbounded and is queried independently (a classic case against embedding unbounded arrays in MongoDB).
-- **Compound indexes:** unique index on `(habitId, date)` to prevent duplicate check-ins for the same day, plus indexes for common query patterns.
-- **Aggregation pipeline:** streak and stats calculation is a great, realistic use case for `$match`, `$sort`, `$group`, and `$facet` — something relational SQL would express very differently.
-- **Denormalized cache field:** `Habit.stats.currentStreak` is a cached/denormalized value updated on write — a common MongoDB pattern (trade consistency effort for read speed).
+@Schema({ timestamps: true })
+export class User {
+  @Prop({ required: true, unique: true, lowercase: true, trim: true })
+  email: string;
 
-## 3. Why This Scope Fits ~6 Hours With AI
+  @Prop({ required: true })
+  passwordHash: string;
 
-- Single bounded domain (3 collections, no complex multi-tenant logic).
-- Clear vertical slices: Auth → Users → Habits → CheckIns → Stats — each completable and testable independently, which maps naturally to `task.md` checklist items and small AI-assisted iterations.
-- No frontend, no third-party integrations, no payment/file-upload complexity — keeps the AI workflow (plan → implement → test → review → PR) practicable in one sitting.
-- Enough depth to practice prompt engineering for debugging (auth/JWT issues), refactoring (extracting streak logic into a service), and review (aggregation pipeline correctness).
+  @Prop({ required: true, trim: true })
+  name: string;
+}
 
-## 4. Tech Stack
+export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index({ email: 1 }, { unique: true });
+```
 
-| Layer | Choice |
-|---|---|
-| Runtime | Node.js (LTS) |
-| Framework | NestJS (TypeScript) |
-| Database | MongoDB (via Mongoose) |
-| Auth | JWT (Passport.js `@nestjs/passport`, `@nestjs/jwt`) |
-| Validation | `class-validator` / `class-transformer` (DTOs) |
-| Docs | Swagger (`@nestjs/swagger`) |
-| Testing | Jest (unit) + Supertest (e2e) |
-| Local infra | Docker Compose (MongoDB container) |
-| AI IDE | Antigravity (agentic build), used per the AI Development Workflow |
+**Notes:**
+- `passwordHash` — bcrypt hash, never store or log plaintext password.
+- `timestamps: true` auto-adds `createdAt` / `updatedAt`.
 
-## 5. In Scope
+---
 
-- User registration & login (JWT auth), password hashing (bcrypt).
-- Habit CRUD (create, list own habits, update, archive/delete) — scoped to the authenticated user.
-- CheckIn create/list/delete for a habit, with duplicate-day prevention.
-- `GET /habits/:id/stats` — aggregation-based current streak, longest streak, last-30-days completion rate.
-- Input validation + centralized error handling (Nest exception filters).
-- Swagger docs at `/api`.
-- Unit tests for streak calculation logic; e2e tests for the core auth + habit + check-in flow.
-- Seed script (optional, if time allows).
+## 2. Habit
 
-## 6. Out of Scope (explicitly, to protect the 6-hour budget)
+```ts
+// habit.schema.ts
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-- Frontend / UI.
-- Social features (sharing habits, following users).
-- Push notifications / reminders.
-- Multi-device sync conflict resolution.
-- Role-based admin panel.
-- Rate limiting / production-grade observability (mention only, don't implement).
+export type HabitDocument = Habit & Document;
 
-## 7. Suggested Timeboxing (6 hours)
+export enum HabitFrequency {
+  DAILY = 'daily',
+  WEEKLY = 'weekly',
+}
 
-| Phase | Time | Output |
-|---|---|---|
-| 1. Requirements & Plan | 30 min | Confirm scope, fill `plan.md` / `task.md` with AI |
-| 2. Project scaffold + Auth module | 60 min | NestJS app boots, Mongo connects, register/login works |
-| 3. Habits module | 60 min | Habit CRUD, scoped to user, validated DTOs |
-| 4. CheckIns module | 60 min | Check-in create/list/delete, duplicate-day index |
-| 5. Stats aggregation | 60 min | Streak + completion rate via aggregation pipeline |
-| 6. Tests + Swagger + docs polish | 45 min | Unit + e2e tests passing, Swagger complete |
-| 7. Review + commit history + PR prep | 25 min | Clean commits, PR description generated & reviewed |
+@Schema({ _id: false })
+class HabitStats {
+  @Prop({ default: 0 })
+  currentStreak: number;
 
-## 8. Success Criteria
+  @Prop({ default: 0 })
+  longestStreak: number;
 
-- `docker compose up` + `npm run start:dev` boots the API against local MongoDB.
-- A user can register, log in, create a habit, check in on it across several days, and retrieve accurate streak stats.
-- Core flows covered by automated tests, all passing.
-- `README.md`, `architecture.md`, `plan.md`, `task.md`, `progress.md` all reflect the final state of the project (used as the running example for AI Context Management practice).
+  @Prop({ default: null })
+  lastCheckInDate: string | null; // 'YYYY-MM-DD'
+}
+
+@Schema({ timestamps: true })
+export class Habit {
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
+
+  @Prop({ required: true, trim: true, maxlength: 100 })
+  title: string;
+
+  @Prop({ trim: true, maxlength: 500, default: '' })
+  description: string;
+
+  @Prop({ trim: true, default: 'general' })
+  category: string;
+
+  @Prop({ type: String, enum: HabitFrequency, default: HabitFrequency.DAILY })
+  frequency: HabitFrequency;
+
+  @Prop({ default: '#4F46E5' })
+  color: string;
+
+  @Prop({ default: false })
+  archived: boolean;
+
+  @Prop({ type: HabitStats, default: () => ({}) })
+  stats: HabitStats;
+}
+
+export const HabitSchema = SchemaFactory.createForClass(Habit);
+HabitSchema.index({ userId: 1, archived: 1 });
+HabitSchema.index({ userId: 1, createdAt: -1 });
+```
+
+**Notes:**
+- `stats` is a **denormalized cache**, recalculated/updated by `HabitsService` whenever a check-in is added or removed. Source of truth for history is still the `checkins` collection — `stats` can always be rebuilt from it.
+- Indexes support "list my active habits" and "list my habits, newest first" — the two most common queries.
+
+---
+
+## 3. CheckIn
+
+```ts
+// checkin.schema.ts
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+
+export type CheckInDocument = CheckIn & Document;
+
+@Schema({ timestamps: true })
+export class CheckIn {
+  @Prop({ type: Types.ObjectId, ref: 'Habit', required: true })
+  habitId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId; // denormalized for direct ownership checks & queries
+
+  @Prop({ required: true }) // 'YYYY-MM-DD', stored as string for simple equality/index
+  date: string;
+
+  @Prop({ trim: true, maxlength: 280, default: '' })
+  note: string;
+}
+
+export const CheckInSchema = SchemaFactory.createForClass(CheckIn);
+CheckInSchema.index({ habitId: 1, date: 1 }, { unique: true }); // prevents duplicate check-in per day
+CheckInSchema.index({ habitId: 1, date: -1 }); // supports stats aggregation (sorted scan)
+```
+
+**Notes:**
+- `date` stored as a plain `'YYYY-MM-DD'` string (not `Date`) to keep streak-day comparisons simple and timezone-safe — check-ins are day-granularity, not time-granularity.
+- The unique compound index `(habitId, date)` is the DB-level guarantee against duplicate check-ins; the service layer should also return a friendly 409 error rather than relying only on the Mongo duplicate-key error.
+
+---
+
+## 4. Key DTO Shapes (for reference, implemented with `class-validator`)
+
+```ts
+// auth
+RegisterDto { email: string; password: string; name: string }
+LoginDto { email: string; password: string }
+
+// habits
+CreateHabitDto { title: string; description?: string; category?: string; frequency?: HabitFrequency; color?: string }
+UpdateHabitDto { title?: string; description?: string; category?: string; color?: string; archived?: boolean }
+
+// checkins
+CreateCheckInDto { date: string; note?: string } // date validated as YYYY-MM-DD
+
+// stats response
+HabitStatsResponse {
+  habitId: string;
+  currentStreak: number;
+  longestStreak: number;
+  completionRateLast30Days: number; // 0..1
+  totalCheckIns: number;
+}
+```
+
+---
+
+## 5. Stats Aggregation Sketch
+
+```ts
+// Rough shape of the pipeline used in StatsService for GET /habits/:id/stats
+db.checkins.aggregate([
+  { $match: { habitId: ObjectId(habitId) } },
+  { $sort: { date: 1 } },
+  {
+    $group: {
+      _id: '$habitId',
+      dates: { $push: '$date' },
+      total: { $sum: 1 },
+    },
+  },
+  // streak logic (current/longest) computed in application code from the
+  // sorted `dates` array — deliberately kept out of the pipeline for readability;
+  // completion rate for last 30 days computed via a second $match on date range + $count.
+]);
+```
