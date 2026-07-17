@@ -21,7 +21,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     const user = await this.usersService.create({
       email: registerDto.email,
-      password: hashedPassword,
+      passwordHash: hashedPassword,
       name: registerDto.name,
     });
 
@@ -34,7 +34,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
