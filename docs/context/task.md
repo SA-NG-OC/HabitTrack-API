@@ -229,29 +229,29 @@ Status legend:
 
 ## Service
 
-- [ ] Create StatsService
-- [ ] Implement aggregation pipeline
+- [x] Create StatsService
+- [x] Implement aggregation pipeline
 
 ---
 
 ## GET /habits/:id/stats
 
-- [ ] Implement controller
-- [ ] Add Swagger decorators
-- [ ] Write integration test (Test DB)
+- [x] Implement controller
+- [x] Add Swagger decorators
+- [x] Write integration test (Test DB)
 
 ---
 
 ## Unit Tests
 
-- [ ] No check-ins → streak = 0
-- [ ] Longest streak preserved after gaps
-- [ ] Current streak resets correctly
-- [ ] 30-day completion rate boundary cases
+- [x] No check-ins → streak = 0
+- [x] Longest streak preserved after gaps
+- [x] Current streak resets correctly
+- [x] 30-day completion rate boundary cases
 
 ---
 
-- [ ] Commit Phase 4
+- [x] Commit Phase 4
 
 ---
 
