@@ -38,6 +38,9 @@ Log format per session:
 - Implemented Custom Swagger Decorators Pattern: Extracted Swagger metadata from `AuthController` into module-specific decorators under `src/auth/decorators/auth-swagger.decorator.ts` to keep controllers clean.
 - Integration Testing: Created end-to-end integration tests in `test/auth.e2e-spec.ts` for all registration and login success/failure paths, utilizing validation pipes and database isolation.
 - Tested: Added comprehensive unit tests in `auth.service.spec.ts` for password hashing, credentials comparison, and JWT payload properties. Verified that both unit tests and e2e tests pass (8 tests total).
+- Implemented Global Response Interceptor: Added `ResponseInterceptor` at `src/common/interceptors/response.interceptor.ts` and registered it globally in `src/main.ts` to wrap successful responses in a standard JSON envelope: `{ statusCode, message, data }`.
+- Login payload enhancement: Updated the login function to return `{ user, accessToken }` (filtering out the `passwordHash` field).
+- Aligned tests & Swagger docs: Updated the custom Swagger decorators, unit tests, and e2e integration tests to support the response envelop and the new login return structure.
 - Commits: Completed and logged Git commits for Phase 0 and Phase 1.
  
  **Not done / blocked:**
