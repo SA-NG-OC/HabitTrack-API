@@ -12,11 +12,16 @@ describe('AuthService', () => {
   let usersService: UsersService;
   let jwtService: JwtService;
 
-  const mockUser = {
+  const mockUserObject = {
     _id: 'mock-user-id',
     email: 'test@example.com',
     passwordHash: 'hashed-password',
     name: 'Test User',
+  };
+
+  const mockUser = {
+    ...mockUserObject,
+    toObject: jest.fn().mockReturnValue(mockUserObject),
   };
 
   const mockUsersService = {
@@ -108,7 +113,14 @@ describe('AuthService', () => {
         email: 'test@example.com',
         sub: 'mock-user-id',
       });
-      expect(result).toEqual({ accessToken: 'mock-jwt-token' });
+      expect(result).toEqual({
+        user: {
+          _id: 'mock-user-id',
+          email: 'test@example.com',
+          name: 'Test User',
+        },
+        accessToken: 'mock-jwt-token',
+      });
     });
 
     it('should throw UnauthorizedException if user not found', async () => {

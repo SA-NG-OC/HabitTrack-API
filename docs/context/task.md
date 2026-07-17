@@ -8,6 +8,9 @@ Status legend:
 - `[x]` Done
 - `[!]` Blocked
 
+# Requirements
+- Create a new branch before starting a phase.
+- Run npm run test, npm run start:dev, and npm run test:e2e before committing code.
 ---
 
 # Phase 0 — Setup
@@ -90,6 +93,9 @@ Status legend:
 ---
 
 # Phase 2 — Habits
+
+## Exception filter
+- [ ] Create exception filter file
 
 ## Model
 

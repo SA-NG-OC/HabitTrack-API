@@ -6,6 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication<App>;
@@ -17,6 +18,7 @@ describe('AuthController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalInterceptors(new ResponseInterceptor());
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -48,8 +50,11 @@ describe('AuthController (e2e)', () => {
         .send(payload)
         .expect(201);
 
-      expect(response.body).toHaveProperty('accessToken');
-      expect(typeof response.body.accessToken).toBe('string');
+      expect(response.body).toHaveProperty('statusCode', 201);
+      expect(response.body).toHaveProperty('message', 'Success');
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty('accessToken');
+      expect(typeof response.body.data.accessToken).toBe('string');
     });
 
     it('should return 409 if email is already registered', async () => {
@@ -121,8 +126,15 @@ describe('AuthController (e2e)', () => {
         .send(payload)
         .expect(200);
 
-      expect(response.body).toHaveProperty('accessToken');
-      expect(typeof response.body.accessToken).toBe('string');
+      expect(response.body).toHaveProperty('statusCode', 200);
+      expect(response.body).toHaveProperty('message', 'Success');
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty('accessToken');
+      expect(typeof response.body.data.accessToken).toBe('string');
+      expect(response.body.data).toHaveProperty('user');
+      expect(response.body.data.user).toHaveProperty('email', 'login@example.com');
+      expect(response.body.data.user).toHaveProperty('name', 'Login Test');
+      expect(response.body.data.user).not.toHaveProperty('passwordHash');
     });
 
     it('should return 401 for incorrect password', async () => {

@@ -10,7 +10,14 @@ export function ApiRegisterDocs() {
       schema: {
         type: 'object',
         properties: {
-          accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsIn...' },
+          statusCode: { type: 'number', example: 201 },
+          message: { type: 'string', example: 'Success' },
+          data: {
+            type: 'object',
+            properties: {
+              accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsIn...' },
+            },
+          },
         },
       },
     }),
@@ -24,11 +31,28 @@ export function ApiLoginDocs() {
     ApiOperation({ summary: 'Log in an existing user' }),
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Login successful, returns access token.',
+      description: 'Login successful, returns user details and access token.',
       schema: {
         type: 'object',
         properties: {
-          accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsIn...' },
+          statusCode: { type: 'number', example: 200 },
+          message: { type: 'string', example: 'Success' },
+          data: {
+            type: 'object',
+            properties: {
+              user: {
+                type: 'object',
+                properties: {
+                  _id: { type: 'string', example: '60d0fe4f5311236168a109ca' },
+                  email: { type: 'string', example: 'user@example.com' },
+                  name: { type: 'string', example: 'John Doe' },
+                  createdAt: { type: 'string', example: '2026-07-17T02:34:36.000Z' },
+                  updatedAt: { type: 'string', example: '2026-07-17T02:34:36.000Z' },
+                },
+              },
+              accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsIn...' },
+            },
+          },
         },
       },
     }),
